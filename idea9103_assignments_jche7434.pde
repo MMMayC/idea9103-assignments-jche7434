@@ -19,11 +19,14 @@ color[][] reverseColSet={
 
 PFont font;
 
+int patternSwitch=0;
+
 void setup(){
   size(600,600);
   background(255);
   colorMode(RGB);
   noStroke();
+   frameRate(5);
   randomPattern(); //Generate a random pattern when running the code
   //Title and descriptions
   fill(255);
@@ -41,7 +44,14 @@ void setup(){
   text("- Press 1, 2, 3 to view preset patterns", width/3+15,height/2+38);
 }
 
-void draw(){}
+void draw(){
+  switch(patternSwitch){
+    case 1: randomPattern(); break;
+    case 2: patternOne(); break;
+    case 3: patternTwo(); break;
+    case 4: patternThree(); break;
+  }
+}
 
 /*draw square with provided the coordinate of origin point,
   color and direction of the cutting line,
@@ -213,7 +223,8 @@ void petal(int origX, int origY){
   and generate a random pattern with randomPattern()
 */
 void mousePressed(){
-  randomPattern();
+  patternSwitch=1;
+  //randomPattern();
 }
 
 /* listens for which key is being pressed
@@ -223,12 +234,15 @@ void mousePressed(){
 */
 void keyPressed(){
   if(key=='1'){
-    patternOne();
+    patternSwitch=2;
+    //patternOne();
   }
   if(key=='2'){
-    patternTwo();
+    patternSwitch=3;
+    //patternTwo();
   }
   if(key=='3'){
-    patternThree();
+    patternSwitch=4;
+    //patternThree();
   }
 }
