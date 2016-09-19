@@ -19,14 +19,19 @@ color[][] reverseColSet={
 
 PFont font;
 
+//Pattern switch, used for judging current pattern
 int patternSwitch=0;
+
+int evenOdd=0;
+
+int ranC=int(random(7));
 
 void setup(){
   size(600,600);
   background(255);
   colorMode(RGB);
   noStroke();
-   frameRate(5);
+   frameRate(3);
   randomPattern(); //Generate a random pattern when running the code
   //Title and descriptions
   fill(255);
@@ -42,13 +47,16 @@ void setup(){
   textSize(18);
   text("- Click to generate random pattern",width/3+15,height/2+13);
   text("- Press 1, 2, 3 to view preset patterns", width/3+15,height/2+38);
+  
+  
 }
 
 void draw(){
   switch(patternSwitch){
     case 1: randomPattern(); break;
-    case 2: patternOne(); break;
-    case 3: patternTwo(); break;
+    case 2: animateOne((evenOdd++)%7,ranC,(ranC+1)%7);
+            break;
+    case 3: animateTwo(); break;
     case 4: patternThree(); break;
   }
 }
@@ -112,10 +120,25 @@ void randomPattern(){
   and every windmill generated in the scree
   n is seperate with random color
 */
-void patternOne(){
+void animateOne(int count, int randomC, int randomC_){
+  if(count%2==0){
+    patternOne(randomC, randomC_);
+  }else{
+   patternOne(randomC_, randomC);
+  }
+ 
+}
+void patternOne(int randomCol_1,int randomCol_2){
   for(int cOrigY=0; cOrigY<height; cOrigY+=height/5){
     for(int cOrigX=0; cOrigX<width; cOrigX+=width/5){
-      windmill(cOrigX,cOrigY,int(random(7)));
+      if(5*cOrigY/height%2==0&&5*cOrigX/width%2==0){
+        windmill(cOrigX,cOrigY,randomCol_1);
+      }else if(5*cOrigY/height%2!=0&&5*cOrigX/width%2!=0){
+        windmill(cOrigX,cOrigY,randomCol_1);
+      }else{
+        windmill(cOrigX,cOrigY,(randomCol_2)%7);
+      }
+      //windmill(cOrigX,cOrigY,int(random(7)));
     }
   }
 }
@@ -134,8 +157,12 @@ void windmill(int origX, int origY, int colR){
 /*the second preset pattern----Rainbow
   call rainbow() in a for loop to fill the screen
 */
-void patternTwo(){
-  int startColor=int(random(7))%7;
+void animateTwo(){
+  patternTwo(ranC);
+  ranC=(ranC+1)%7;
+}
+void patternTwo(int startColor){
+  //int startColor=int(random(7))%7;
   for(int cOrigX=0; cOrigX<width; cOrigX+=width/5){
     rainbow(cOrigX,startColor);
     startColor++;
@@ -234,6 +261,7 @@ void mousePressed(){
 */
 void keyPressed(){
   if(key=='1'){
+    ranC=int(random(7));
     patternSwitch=2;
     //patternOne();
   }
