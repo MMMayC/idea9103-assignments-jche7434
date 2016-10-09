@@ -57,7 +57,7 @@ void draw(){
     case 2: animateOne((evenOdd++)%7,ranC,(ranC+1)%7);
             break;
     case 3: animateTwo(); break;
-    case 4: patternThree(); break;
+    case 4: animateThree(ranC); break;
   }
 }
 
@@ -190,14 +190,18 @@ void rainbow(int origX, int startColR){
   divide the screen into four parts
   generate the first part with radial() and get the others by translation and rotation
 */
-void patternThree(){
+void animateThree(int randomC){
+  patternThree(ranC);
+  ranC=(ranC+1)%7;
+}
+void patternThree(int randomCol){
   float[] angles={0,-0.5,0.5,1.0};
   int[][] translate={{0,0},{0,height},{width,0},{width,height}};
   for(int i=0; i<4; i++){
     pushMatrix();
-      translate(translate[i][0],translate[i][1]);
+      translate(translate[i][0]in,translate[i][1]);
       rotate(PI*angles[i]);
-      petal(0,0);
+      petal(0,0, randomCol);
     popMatrix();
       //rotate(-PI*angles[i]);
       //translate(-translate[i][0],-translate[i][1]);
@@ -207,43 +211,43 @@ void patternThree(){
 /*draw the 5*5 grid from the given original point
   the coordinates of squares drawing are given below
 */
-void petal(int origX, int origY){
+void petal(int origX, int origY, int col){
   //(0,0),(0,1),(0,2),(1,0),(1,1),(2,0)
   for(int y=0; y<3; y++){
     for(int x=0; x<3-y;x++){
-      square(origX+x*width/10,origY+y*height/10,reverseColSet[3],0);
+      square(origX+x*width/10,origY+y*height/10,reverseColSet[(col+3)%7],0);
     }
   }
   //(4,3),(3,4),(4,4)
   for(int y=0; y<2; y++){
     for(int x=0; x<y+1; x++){
-      square(origX+(4-x)*width/10,origY+(3+y)*height/10,reverseColSet[4],0);
+      square(origX+(4-x)*width/10,origY+(3+y)*height/10,reverseColSet[(col+4)%7],0);
     }
   }
   //(4,2),(3,3),(2,4)
   for(int y=0; y<3; y++){
-    square(origX+(4-y)*width/10,origY+(2+y)*height/10,reverseColSet[5],0);
+    square(origX+(4-y)*width/10,origY+(2+y)*height/10,reverseColSet[(col+5)%7],0);
   }
   for(int y=0; y<2; y++){
     //(3,2),(2,3)    
-    square(origX+(3-y)*width/10,origY+(2+y)*height/10,colorSet[5],0);
+    square(origX+(3-y)*width/10,origY+(2+y)*height/10,colorSet[(col+5)%7],0);
     //(2,1),(1,2)
-    square(origX+(2-y)*width/10,origY+(1+y)*height/10,reverseColSet[2],0);
+    square(origX+(2-y)*width/10,origY+(1+y)*height/10,reverseColSet[(col+2)%7],0);
     //(1,3),(0,4)
-    square(origX+(1-y)*width/10,origY+(3+y)*height/10,reverseColSet[6],0);
+    square(origX+(1-y)*width/10,origY+(3+y)*height/10,reverseColSet[(col+6)%7],0);
     //(3,1),(4,0)
-    square(origX+(4-y)*width/10,origY+y*height/10,reverseColSet[6],0);
+    square(origX+(4-y)*width/10,origY+y*height/10,reverseColSet[(col+6)%7],0);
   }
   //(2,2)
-  square(origX+2*width/10,origY+2*height/10,colorSet[4],0);
+  square(origX+2*width/10,origY+2*height/10,colorSet[(col+4)%7],0);
   //(3,0)
-  square(origX+3*width/10,origY,reverseColSet[1],0);
+  square(origX+3*width/10,origY,reverseColSet[(col+1)%7],0);
   //(0,3)
-  square(origX,origY+3*height/10,reverseColSet[1],0);
+  square(origX,origY+3*height/10,reverseColSet[(col+1)%7],0);
   //(1,4)
-  square(origX+width/10,origY+4*height/10,colorSet[6],0);
+  square(origX+width/10,origY+4*height/10,colorSet[(col+6)%7],0);
   //(4,1)
-  square(origX+4*width/10,origY+height/10,colorSet[6],0);
+  square(origX+4*width/10,origY+height/10,colorSet[(col+6)%7],0);
 }
 
 /*listens for a mouse pressed event 
@@ -270,6 +274,7 @@ void keyPressed(){
     //patternTwo();
   }
   if(key=='3'){
+    ranC=int(random(7));
     patternSwitch=4;
     //patternThree();
   }
